@@ -21,7 +21,9 @@ public class ZkNode {
                 .build();
         client.start();
 //        createNode(client);
-        deleteNode(client);
+//        deleteNode(client);
+//        getData(client);
+        updateData(client);
     }
 
     /**
@@ -46,7 +48,26 @@ public class ZkNode {
         client.delete().deletingChildrenIfNeeded().withVersion(stat.getAversion()).forPath(path);
     }
 
+    /**
+     * 获取数据
+     * @param client
+     * @throws Exception
+     */
     public static void  getData(CuratorFramework client) throws Exception{
+        Stat stat = new Stat();
+        byte[] result = client.getData().storingStatIn(stat).forPath(path);
+        System.out.println("获取的数据为："+new String(result));
+    }
 
+    /**
+     * 更新数据
+     * @param client
+     * @throws Exception
+     */
+    public static void updateData(CuratorFramework client) throws Exception{
+        Stat stat = new Stat();
+        byte[] result = client.getData().storingStatIn(stat).forPath(path);
+        System.out.println("获取的数据为："+new String(result));
+        client.setData().withVersion(stat.getVersion()).forPath(path,"new".getBytes());
     }
 }
